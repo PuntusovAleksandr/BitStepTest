@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">BitStepTest</string>
+
+    <!--// name Activity-->
+    <string name="register_activity">Регистрация</string>
+
     <string name="no_internet">Нет интернет соединения</string>
     <string name="login">Логин</string>
     <string name="log_in">Вход</string>
     <string name="text_for_login">Данные для входа</string>
+    <string name="user_data">Личные данные</string>
     <string name="password">Пароль</string>
     <string name="email_incorrect">Введите правильно T-Mail</string>
     <string name="password_rules">Введите правильно пароль</string>
@@ -15,6 +20,24 @@
     </string>
     <string name="or_login_fb">Или войдите через</string>
     <string name="forgot_password">Забыли пароль?</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="email">Почта</string>
+    <string name="name_organisation">Нвзвание организации</string>
+    <string name="locale">Адрес</string>
+    <string name="phone">Телефон</string>
+    <string name="site">Сайт</string>
+    <string name="confirm_password">Подтверждение пароля</string>
+    <string name="from_save_file">Выберите источник</string>
+    <string name="from_gallery">Галлерея</string>
+    <string name="make_photo">Сделать фото</string>
+    <string name="camera_error">Ошибка камеры</string>
+    <string name="camera_gallery">Ошибка галлереи</string>
+    <string name="camera_permission_denied">Камера не подтверждена</string>
+    <string name="storagel_permission_denied">Чтение и запись памяти не подтверждено</string>
+    <string name="permissions_not_granted">Разрешение не подтверждено</string>
+    <string name="open_permissions_grant">Открыть разрешение</string>
+    <string name="unkown_format">Неизвестный формат</string>
+
     <!--Увас еще нет аккаунта? <b><font color="#FFFFFF">Зарегистрироваться</font></b>-->
 
 </resources>

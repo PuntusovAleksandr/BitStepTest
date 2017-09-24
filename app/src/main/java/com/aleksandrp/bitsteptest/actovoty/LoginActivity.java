@@ -1,7 +1,10 @@
 package com.aleksandrp.bitsteptest.actovoty;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
@@ -50,6 +53,9 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
     private LoginPresenter mPresenter;
     private Intent serviceIntent;
 
+    private Uri sourceImageUri;
+    private String mPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +95,8 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
         super.onDestroy();
     }
 
+
+
 //    ==================================================
 
     @OnClick(R.id.tv_login)
@@ -124,7 +132,8 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
 
 
     private void signUp() {
-
+        startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+        finish();
     }
 //    ==================================================
 
@@ -173,6 +182,7 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
             progressBar_registration.setVisibility(View.GONE);
         }
     }
+
 
 
 }
