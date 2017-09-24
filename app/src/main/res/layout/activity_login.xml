@@ -8,6 +8,8 @@
     tools:context="com.aleksandrp.bitsteptest.actovoty.LoginActivity">
 
 
+    <include layout="@layout/login_container"/>
+
 
     <include layout="@layout/layout_progress"/>
 

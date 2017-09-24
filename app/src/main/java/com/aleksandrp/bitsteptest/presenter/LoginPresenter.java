@@ -12,7 +12,6 @@ import com.aleksandrp.bitsteptest.rx.BusProvider;
 import com.aleksandrp.bitsteptest.rx.event.NetworkFailEvent;
 import com.aleksandrp.bitsteptest.rx.event.NetworkRequestEvent;
 import com.aleksandrp.bitsteptest.rx.event.UpdateUiEvent;
-import com.aleksandrp.bitsteptest.utils.SettingsApp;
 import com.aleksandrp.bitsteptest.utils.Validation;
 
 import rx.Subscriber;
@@ -54,9 +53,9 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
                     Object data = event.getData();
 
                     if (event.getId() == RESPONSE_SIGN_IN) {
-                        saveTokenServer((RegisterUserModel) data);
-                    } else if (event.getId() == RESPONSE_SIGN_ADD_TOKEN_FIREbASE) {
-                        goToMainActivity();
+                        saveTokenServer();
+//                    } else if (event.getId() == RESPONSE_SIGN_ADD_TOKEN_FIREbASE) {
+//                        goToMainActivity();
                     }
 
                 } else if (mO instanceof NetworkFailEvent) {
@@ -101,8 +100,8 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
             showMessageError(App.getContext().getString(R.string.password_rules));
             ((LoginActivity) mvpView).clearPassword();
         } else if (validEmail && validPassword) {
-            SettingsApp.getInstance().setEmail(email);
-            SettingsApp.getInstance().setPass(password);
+//            SettingsApp.getInstance().setEmail(email);
+//            SettingsApp.getInstance().setPass(password);
 
 
             NetworkRequestEvent<Bundle> networkRequestEvent = new NetworkRequestEvent();
@@ -111,40 +110,26 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
         }
     }
 
-    public void signUpFb(String mId) {
-        NetworkRequestEvent<Bundle> networkRequestEvent = new NetworkRequestEvent();
-        networkRequestEvent.setId(ApiConstants.SIGN_IN_FB);
-        Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_TOKEN_FB, mId);
-        networkRequestEvent.setData(bundle);
-        ((LoginActivity) mvpView).makeRequest(networkRequestEvent);
+
+    private void saveTokenServer() {
     }
 
-    private void saveTokenServer(RegisterUserModel mData) {
-
-        saveTokenServerAnswer(mData);
-
-        SettingsApp.getInstance().setUserServerId(mData.user.id_server);
-        SettingsApp.getInstance().setEmail(mData.user.email);
-        RealmObj.getInstance().saveUserModel(mData, this);
-    }
-
-    public void goToMain(RegisterUserModel mData) {
-
-        SettingsApp.getInstance().setTokenServer(mData.access_token);
-        SettingsApp.getInstance().setTokenType(mData.token_type);
-        try {
-            ((LoginActivity) mvpView).addTokenFireBase();
-        } catch (NullPointerException mE) {
-            mE.printStackTrace();
-        }
+    public void goToMain() {
+//
+//        SettingsApp.getInstance().setTokenServer(mData.access_token);
+//        SettingsApp.getInstance().setTokenType(mData.token_type);
+//        try {
+//            ((LoginActivity) mvpView).addTokenFireBase();
+//        } catch (NullPointerException mE) {
+//            mE.printStackTrace();
+//        }
     }
 
 
     public void addTokenFirebase() {
-        NetworkRequestEvent<Bundle> networkRequestEvent = new NetworkRequestEvent();
-        networkRequestEvent.setId(ApiConstants.SIGN_ADD_TOKEN_FIREbASE);
-        ((LoginActivity) mvpView).makeRequest(networkRequestEvent);
+//        NetworkRequestEvent<Bundle> networkRequestEvent = new NetworkRequestEvent();
+//        networkRequestEvent.setId(ApiConstants.SIGN_ADD_TOKEN_FIREbASE);
+//        ((LoginActivity) mvpView).makeRequest(networkRequestEvent);
     }
 
 
