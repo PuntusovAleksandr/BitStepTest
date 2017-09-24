@@ -6,12 +6,14 @@ import com.aleksandrp.bitsteptest.App;
 import com.aleksandrp.bitsteptest.R;
 import com.aleksandrp.bitsteptest.actovoty.LoginActivity;
 import com.aleksandrp.bitsteptest.api.constant.ApiConstants;
+import com.aleksandrp.bitsteptest.api.model.UserModel;
 import com.aleksandrp.bitsteptest.presenter.interfaces.BasePresenter;
 import com.aleksandrp.bitsteptest.presenter.interfaces.PresenterEventListener;
 import com.aleksandrp.bitsteptest.rx.BusProvider;
 import com.aleksandrp.bitsteptest.rx.event.NetworkFailEvent;
 import com.aleksandrp.bitsteptest.rx.event.NetworkRequestEvent;
 import com.aleksandrp.bitsteptest.rx.event.UpdateUiEvent;
+import com.aleksandrp.bitsteptest.utils.SettingsApp;
 import com.aleksandrp.bitsteptest.utils.Validation;
 
 import rx.Subscriber;
@@ -53,7 +55,7 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
                     Object data = event.getData();
 
                     if (event.getId() == RESPONSE_SIGN_IN) {
-                        saveTokenServer();
+                        saveTokenServer((UserModel)data);
 //                    } else if (event.getId() == RESPONSE_SIGN_ADD_TOKEN_FIREbASE) {
 //                        goToMainActivity();
                     }
@@ -70,7 +72,11 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
     //================================================
 
     public void showMessageError(String mMessage) {
-        ((LoginActivity) mvpView).showMessageError(mMessage);
+        try {
+            ((LoginActivity) mvpView).showMessageError(mMessage);
+        } catch (Exception mE) {
+            mE.printStackTrace();
+        }
     }
 
 
@@ -100,8 +106,8 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
             showMessageError(App.getContext().getString(R.string.password_rules));
             ((LoginActivity) mvpView).clearPassword();
         } else if (validEmail && validPassword) {
-//            SettingsApp.getInstance().setEmail(email);
-//            SettingsApp.getInstance().setPass(password);
+            SettingsApp.getInstance().setEmail(email);
+            SettingsApp.getInstance().setPass(password);
 
 
             NetworkRequestEvent<Bundle> networkRequestEvent = new NetworkRequestEvent();
@@ -111,7 +117,16 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
     }
 
 
-    private void saveTokenServer() {
+    private void saveTokenServer(UserModel mData) {
+        if (mData.status) {
+            try {
+                ((LoginActivity) mvpView).goToMainActivity();
+            } catch (NullPointerException mE) {
+                mE.printStackTrace();
+            }
+        } else {
+            showMessageError(mData.error);
+        }
     }
 
     public void goToMain() {
@@ -130,15 +145,6 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
 //        NetworkRequestEvent<Bundle> networkRequestEvent = new NetworkRequestEvent();
 //        networkRequestEvent.setId(ApiConstants.SIGN_ADD_TOKEN_FIREbASE);
 //        ((LoginActivity) mvpView).makeRequest(networkRequestEvent);
-    }
-
-
-    private void goToMainActivity() {
-        try {
-            ((LoginActivity) mvpView).goToMainActivity();
-        } catch (NullPointerException mE) {
-            mE.printStackTrace();
-        }
     }
 
 }

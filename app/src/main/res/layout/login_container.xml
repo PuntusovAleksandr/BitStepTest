@@ -25,7 +25,7 @@
         android:gravity="center"
         android:paddingBottom="@dimen/_8dp"
         android:paddingTop="@dimen/_8dp"
-        android:text="@string/login"
+        android:text="@string/log_in"
         android:textColor="@android:color/black"
         android:textSize="@dimen/_16sp"/>
 

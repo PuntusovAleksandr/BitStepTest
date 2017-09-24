@@ -53,6 +53,8 @@ public class SettingsApp {
     // Keys for opening settings from xml file
     private static final String KEY_LOGIN = "KEY_LOGIN";
     private static final String KEY_TOKEN_SERVER= "KEY_TOKEN_SERVER";
+    private static final String KEY_EMAIL= "KEY_EMAIL";
+    private static final String KEY_PASS= "KEY_PASS";
 
 
     // Default values of settings
@@ -102,5 +104,46 @@ public class SettingsApp {
         Log.d(TAG, "setTokenServer");
         editor.putString(KEY_TOKEN_SERVER, ip).commit();
     }
+
+    /**
+     * GET email
+     *
+     * @return
+     */
+    public String getEmail() {
+        Log.d(TAG, "getEmail");
+        return sPref.getString(KEY_EMAIL, DEF_EMPTY_STRING);
+    }
+
+    /**
+     * SET email
+     *
+     * @param ip
+     */
+    public void setEmail(String ip) {
+        Log.d(TAG, "setEmail");
+        editor.putString(KEY_EMAIL, ip).commit();
+    }
+
+    /**
+     * GET Pass
+     *
+     * @return
+     */
+    public String getPass() {
+        Log.d(TAG, "getPass");
+        return sPref.getString(KEY_PASS, DEF_EMPTY_STRING);
+    }
+
+    /**
+     * SET Pass
+     *
+     * @param ip
+     */
+    public void setPass(String ip) {
+        Log.d(TAG, "setPass");
+        editor.putString(KEY_PASS, ip).commit();
+    }
+
 
 }

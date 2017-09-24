@@ -7,7 +7,8 @@ package com.aleksandrp.bitsteptest.utils;
 public class Validation {
 
     public static final String REGULAR_MAIL = "^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,15}$";
-    public static final String REGULAR_NUMBER = "^[0-9]{5,10}$";
+    public static final String REGULAR_PASS = "(?=(.*[0-9]))(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,30}";
+
 
     /**
      * Check the email validity
@@ -28,7 +29,7 @@ public class Validation {
      */
     public static boolean isValidPassword(String loginText) {
         if (loginText.isEmpty()) return false;
-        return loginText.matches(Validation.REGULAR_NUMBER);
+        return loginText.matches(Validation.REGULAR_PASS);
     }
 
 }
