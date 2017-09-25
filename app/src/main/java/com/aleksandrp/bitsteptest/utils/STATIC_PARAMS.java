@@ -12,5 +12,6 @@ public class STATIC_PARAMS {
 
     // for send data to api
     public static final String SERVICE_JOB_ID_TITLE = "serviceJobId";
+    public static final String KEY_NEW_USER = "KEY_NEW_USER";
 
 }

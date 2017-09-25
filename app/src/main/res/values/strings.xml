@@ -12,6 +12,11 @@
     <string name="password">Пароль</string>
     <string name="email_incorrect">Введите правильно T-Mail</string>
     <string name="password_rules">Введите правильно пароль</string>
+    <string name="password_confirmed">Пароли не совпадают</string>
+    <string name="organisation_rules">Заполните поле Организация</string>
+    <string name="locale_rules">Заполните поле Адресс</string>
+    <string name="phone_rules">Введите правильно телефон</string>
+    <string name="site_rules">Введите правильно сайт</string>
 
     <string name="text_sign_up">
         <![CDATA[

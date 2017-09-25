@@ -5,6 +5,7 @@ import android.net.Uri;
 import com.aleksandrp.bitsteptest.api.RestAdapter;
 import com.aleksandrp.bitsteptest.api.constant.ApiConstants;
 import com.aleksandrp.bitsteptest.api.interfaces.ServiceUser;
+import com.aleksandrp.bitsteptest.api.model.NewUserModel;
 import com.aleksandrp.bitsteptest.api.model.UserModel;
 import com.aleksandrp.bitsteptest.rx.BusProvider;
 import com.aleksandrp.bitsteptest.rx.event.NetworkResponseEvent;
@@ -46,32 +47,6 @@ public class ApiUserHelper {
                 );
         return MultipartBody.Part.createFormData(mS, mFile.getName(), body);
     }
-
-//    private File getFileFromRes() {
-//        Bitmap bm =
-//                BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.icon_task_white);
-//        File imageFile = new File(getCacheDir(), "freeBe" + EXTENSION);
-//        FileOutputStream fos = null;
-//        try {
-//            fos = new FileOutputStream(imageFile);
-//            try {
-//                bm.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            fos.close();
-//        } catch (IOException e) {
-//            Log.e("app", e.getMessage());
-//            if (fos != null) {
-//                try {
-//                    fos.close();
-//                } catch (IOException e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
-//        }
-//        return imageFile;
-//    }
 
     //================================================================================================
 
@@ -136,52 +111,89 @@ public class ApiUserHelper {
 
     }
 
-    public void signUp(String tokenFb) {
-//        restAdapter.init(false, "sigInFb");
-//        ServiceUser serviceUser =
-//                restAdapter.getRetrofit().create(ServiceUser.class);
-//        Observable<Response<RegisterUserModel>> allSources =
-//                serviceUser.sigInFb(API_CLIENT_ID, API_CLIENT_SECRET, API_GRANT_TYPE, tokenFb);
-//        allSources.subscribeOn(Schedulers.newThread()).
-//                subscribe(new Subscriber<Response<RegisterUserModel>>() {
-//                    private NetworkResponseEvent event;
-//                    private NetworkResponseEvent<String> eventError;
-//                    private RegisterUserModel body;
-//                    private String errorText = "";
-//
-//                    @Override
-//                    public void onCompleted() {
-//                        if (event != null) {
-//                            event.setSucess(true);
-//                            event.setData(body);
-//                        } else {
-//                            event = new NetworkResponseEvent<>();
-//                            event.setId(ApiConstants.ERROR);
-//                            event.setSucess(false);
-//                            event.setData(errorText);
-//                        }
-//                        BusProvider.send(event);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        eventError = new NetworkResponseEvent<>();
-//                        eventError.setId(ApiConstants.ERROR);
-//                        eventError.setData("Error load Sources ::: " + e.getMessage());
-//                        eventError.setSucess(false);
-//                        BusProvider.send(eventError);
-//                    }
-//
-//                    @Override
-//                    public void onNext(Response<RegisterUserModel> mResponse) {
-//                        if (mResponse.isSuccessful()) {
-//                            event = new NetworkResponseEvent<>();
-//                            event.setId(ApiConstants.SIGN_IN_FB);
-//                            body = mResponse.body();
-//                        } else {
-//                            errorText = handlerErrors(mResponse);
-//                        }
-//                    }
-//                });
+    public void sigUp(NewUserModel mNewUserModel) {
+        boolean isPhoto = true;
+        String tokenFCM = SettingsApp.getInstance().getTokenFCM();
+
+        File file = new File(mNewUserModel.getPath());
+        if (!file.exists()) {
+            isPhoto = false;
+        }
+
+        restAdapter.init(false, "sigUp");
+        ServiceUser serviceUser =
+                restAdapter.getRetrofit().create(ServiceUser.class);
+        Observable<Response<UserModel>> allSources =
+                serviceUser.sigUpNoPhoto(
+                        createPartFromString(mNewUserModel.getEmail()),
+                        createPartFromString(mNewUserModel.getOrganisation()),
+                        createPartFromString(mNewUserModel.getLocale()),
+                        createPartFromString(mNewUserModel.getSite()),
+                        createPartFromString(mNewUserModel.getPassword()),
+                        createPartFromString(mNewUserModel.getPassword()),
+                        createPartFromString(tokenFCM)
+                );
+        if (isPhoto) {
+            MultipartBody.Part part = prepareFile("icon", file);
+            allSources = serviceUser.sigUp(
+                    createPartFromString(mNewUserModel.getEmail()),
+                    createPartFromString(mNewUserModel.getOrganisation()),
+                    createPartFromString(mNewUserModel.getLocale()),
+                    createPartFromString(mNewUserModel.getSite()),
+                    createPartFromString(mNewUserModel.getPassword()),
+                    createPartFromString(mNewUserModel.getPassword()),
+                    createPartFromString(tokenFCM),
+                    part
+            );
+        }
+        allSources
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Subscriber<Response<UserModel>>() {
+                    private NetworkResponseEvent event;
+                    private NetworkResponseEvent<String> eventError;
+                    private UserModel body;
+                    private String errorText = "";
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        eventError = new NetworkResponseEvent<>();
+                        eventError.setId(ApiConstants.ERROR);
+                        eventError.setData("Error load Sources ::: " + e.getMessage());
+                        eventError.setSucess(false);
+                        BusProvider.send(eventError);
+                    }
+
+                    @Override
+                    public void onNext(Response<UserModel> mResponse) {
+                        if (mResponse.isSuccessful()) {
+                            event = new NetworkResponseEvent<>();
+                            event.setId(ApiConstants.SIGN_UP);
+                            body = mResponse.body();
+                        } else {
+                            if (mResponse.errorBody() != null) {
+                                try {
+                                    errorText = mResponse.errorBody().string();
+                                } catch (IOException mE) {
+                                    mE.printStackTrace();
+                                }
+                            }
+                        }
+                        if (event != null) {
+                            event.setSucess(true);
+                            event.setData(body);
+                        } else {
+                            event = new NetworkResponseEvent<>();
+                            event.setId(ApiConstants.ERROR);
+                            event.setData(errorText);
+                            event.setSucess(false);
+                        }
+                        BusProvider.send(event);
+                    }
+                });
     }
 }

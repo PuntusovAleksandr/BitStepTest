@@ -10,6 +10,10 @@ import com.google.gson.annotations.SerializedName;
 public class UserModel {
 
 
+    @SerializedName("data")
+    @Expose
+    public _UserModel data;
+
     @SerializedName("message")
     @Expose
     public String error;

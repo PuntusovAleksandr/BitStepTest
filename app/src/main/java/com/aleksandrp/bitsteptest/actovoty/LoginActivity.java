@@ -1,10 +1,8 @@
 package com.aleksandrp.bitsteptest.actovoty;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
@@ -19,7 +17,6 @@ import com.aleksandrp.bitsteptest.api.service.ServiceApi;
 import com.aleksandrp.bitsteptest.presenter.LoginPresenter;
 import com.aleksandrp.bitsteptest.presenter.interfaces.MvpActionView;
 import com.aleksandrp.bitsteptest.rx.event.NetworkRequestEvent;
-import com.aleksandrp.bitsteptest.utils.SettingsApp;
 import com.aleksandrp.bitsteptest.utils.ShowToast;
 
 import butterknife.Bind;
@@ -122,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
     //    ==================================================
     private void login() {
         if (checkInternetConnection()) {
-            mPresenter.checkValidEmailPass(
+            mPresenter.login(
                     et_email.getText().toString(),
                     et_password.getText().toString());
         } else {
@@ -142,11 +139,6 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
         clearPassword();
         showProgress(false);
         ShowToast.showMessageError(mMessage);
-    }
-
-    public void addTokenFireBase() {
-        SettingsApp.getInstance().setLogin(true);
-        mPresenter.addTokenFirebase();
     }
 
     public void goToMainActivity() {

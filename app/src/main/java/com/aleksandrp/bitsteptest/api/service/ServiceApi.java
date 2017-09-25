@@ -2,6 +2,7 @@ package com.aleksandrp.bitsteptest.api.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -9,6 +10,7 @@ import com.aleksandrp.bitsteptest.App;
 import com.aleksandrp.bitsteptest.R;
 import com.aleksandrp.bitsteptest.api.constant.ApiConstants;
 import com.aleksandrp.bitsteptest.api.helper.ApiUserHelper;
+import com.aleksandrp.bitsteptest.api.model.NewUserModel;
 import com.aleksandrp.bitsteptest.rx.BusProvider;
 import com.aleksandrp.bitsteptest.rx.event.NetworkFailEvent;
 import com.aleksandrp.bitsteptest.rx.event.NetworkResponseEvent;
@@ -17,6 +19,7 @@ import com.aleksandrp.bitsteptest.rx.event.UpdateUiEvent;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
+import static com.aleksandrp.bitsteptest.utils.STATIC_PARAMS.KEY_NEW_USER;
 import static com.aleksandrp.bitsteptest.utils.STATIC_PARAMS.SERVICE_JOB_ID_TITLE;
 
 /**
@@ -95,11 +98,16 @@ public class ServiceApi extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         this.startId = startId;
         int jobId = intent.getIntExtra(SERVICE_JOB_ID_TITLE, -1);
+        Bundle bundle = intent.getExtras();
+        NewUserModel newUserModel = bundle.getParcelable(KEY_NEW_USER);
 
         switch (jobId) {
             // for user
             case ApiConstants.SIGN_IN:
                 mApiUserHelper.sigIn();
+                break;
+            case ApiConstants.SIGN_UP:
+                mApiUserHelper.sigUp(newUserModel);
                 break;
 
         }
@@ -117,6 +125,9 @@ public class ServiceApi extends Service {
             // for user
             case ApiConstants.SIGN_IN:
                 updateUiEvent.setId(ApiConstants.RESPONSE_SIGN_IN);
+                break;
+            case ApiConstants.SIGN_UP:
+                updateUiEvent.setId(ApiConstants.RESPONSE_SIGN_UP);
                 break;
 
         }

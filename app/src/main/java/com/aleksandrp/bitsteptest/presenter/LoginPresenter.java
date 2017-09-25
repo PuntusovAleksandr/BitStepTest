@@ -5,7 +5,9 @@ import android.os.Bundle;
 import com.aleksandrp.bitsteptest.App;
 import com.aleksandrp.bitsteptest.R;
 import com.aleksandrp.bitsteptest.actovoty.LoginActivity;
+import com.aleksandrp.bitsteptest.actovoty.RegisterActivity;
 import com.aleksandrp.bitsteptest.api.constant.ApiConstants;
+import com.aleksandrp.bitsteptest.api.model.NewUserModel;
 import com.aleksandrp.bitsteptest.api.model.UserModel;
 import com.aleksandrp.bitsteptest.presenter.interfaces.BasePresenter;
 import com.aleksandrp.bitsteptest.presenter.interfaces.PresenterEventListener;
@@ -20,6 +22,8 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static com.aleksandrp.bitsteptest.api.constant.ApiConstants.RESPONSE_SIGN_IN;
+import static com.aleksandrp.bitsteptest.api.constant.ApiConstants.RESPONSE_SIGN_UP;
+import static com.aleksandrp.bitsteptest.utils.STATIC_PARAMS.KEY_NEW_USER;
 
 /**
  * Created by AleksandrP on 24.09.2017.
@@ -55,9 +59,9 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
                     Object data = event.getData();
 
                     if (event.getId() == RESPONSE_SIGN_IN) {
-                        saveTokenServer((UserModel)data);
-//                    } else if (event.getId() == RESPONSE_SIGN_ADD_TOKEN_FIREbASE) {
-//                        goToMainActivity();
+                        saveTokenServer((UserModel) data);
+                    } else if (event.getId() == RESPONSE_SIGN_UP) {
+                        showData((UserModel) data);
                     }
 
                 } else if (mO instanceof NetworkFailEvent) {
@@ -74,6 +78,11 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
     public void showMessageError(String mMessage) {
         try {
             ((LoginActivity) mvpView).showMessageError(mMessage);
+        } catch (Exception mE) {
+            mE.printStackTrace();
+        }
+        try {
+            ((RegisterActivity) mvpView).showMessageError(mMessage);
         } catch (Exception mE) {
             mE.printStackTrace();
         }
@@ -96,7 +105,7 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
 
     //================================================
 
-    public void checkValidEmailPass(String email, String password) {
+    public void login(String email, String password) {
         boolean validEmail = Validation.isValidEmail(email);
         boolean validPassword = Validation.isValidPassword(password);
         if (!validEmail) {
@@ -117,6 +126,28 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
     }
 
 
+    public void registerNewUser(String mEmail, String mOrganisation, String mLocale, String mSite,
+                                String mPassword, String mPhone, String mPath) {
+
+        NewUserModel newUserModel = new NewUserModel(
+                mEmail,
+                mOrganisation,
+                mLocale,
+                mSite,
+                mPassword,
+                mPhone,
+                mPath
+        );
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_NEW_USER, newUserModel);
+
+        NetworkRequestEvent<Bundle> networkRequestEvent = new NetworkRequestEvent();
+        networkRequestEvent.setId(ApiConstants.SIGN_UP);
+        networkRequestEvent.setData(bundle);
+        ((RegisterActivity) mvpView).makeRequest(networkRequestEvent);
+    }
+
+
     private void saveTokenServer(UserModel mData) {
         if (mData.status) {
             try {
@@ -129,22 +160,9 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
         }
     }
 
-    public void goToMain() {
-//
-//        SettingsApp.getInstance().setTokenServer(mData.access_token);
-//        SettingsApp.getInstance().setTokenType(mData.token_type);
-//        try {
-//            ((LoginActivity) mvpView).addTokenFireBase();
-//        } catch (NullPointerException mE) {
-//            mE.printStackTrace();
-//        }
+    private void showData(UserModel mData) {
+        if (mData.error != null) {
+            showMessageError(mData.error);
+        }
     }
-
-
-    public void addTokenFirebase() {
-//        NetworkRequestEvent<Bundle> networkRequestEvent = new NetworkRequestEvent();
-//        networkRequestEvent.setId(ApiConstants.SIGN_ADD_TOKEN_FIREbASE);
-//        ((LoginActivity) mvpView).makeRequest(networkRequestEvent);
-    }
-
 }

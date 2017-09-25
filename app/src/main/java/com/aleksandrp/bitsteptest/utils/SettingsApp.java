@@ -55,6 +55,7 @@ public class SettingsApp {
     private static final String KEY_TOKEN_SERVER= "KEY_TOKEN_SERVER";
     private static final String KEY_EMAIL= "KEY_EMAIL";
     private static final String KEY_PASS= "KEY_PASS";
+    private static final String KEY_TOKEN_FCM = "KEY_TOKEN_FCM";
 
 
     // Default values of settings
@@ -145,5 +146,17 @@ public class SettingsApp {
         editor.putString(KEY_PASS, ip).commit();
     }
 
+
+
+    public String getTokenFCM() {
+        Log.d(TAG, "getTokenFCM");
+        return sPref.getString(KEY_TOKEN_FCM, "");
+    }
+
+
+    public void setTokenFCM(String ip) {
+        Log.d(TAG, "setTokenFCM " + ip);
+        editor.putString(KEY_TOKEN_FCM, ip).commit();
+    }
 
 }

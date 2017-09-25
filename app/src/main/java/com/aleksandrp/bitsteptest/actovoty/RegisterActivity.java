@@ -25,22 +25,31 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aleksandrp.bitsteptest.App;
 import com.aleksandrp.bitsteptest.BuildConfig;
 import com.aleksandrp.bitsteptest.R;
 import com.aleksandrp.bitsteptest.api.service.ServiceApi;
 import com.aleksandrp.bitsteptest.presenter.LoginPresenter;
 import com.aleksandrp.bitsteptest.presenter.interfaces.MvpActionView;
+import com.aleksandrp.bitsteptest.rx.event.NetworkRequestEvent;
 import com.aleksandrp.bitsteptest.utils.FileUtils;
+import com.aleksandrp.bitsteptest.utils.ShowToast;
+import com.aleksandrp.bitsteptest.utils.Validation;
 
 import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ru.tinkoff.decoro.MaskImpl;
+import ru.tinkoff.decoro.slots.PredefinedSlots;
+import ru.tinkoff.decoro.slots.Slot;
+import ru.tinkoff.decoro.watchers.FormatWatcher;
+import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 import static com.aleksandrp.bitsteptest.utils.FileUtils.onCaptureImageResult;
+import static com.aleksandrp.bitsteptest.utils.STATIC_PARAMS.SERVICE_JOB_ID_TITLE;
 import static com.aleksandrp.bitsteptest.utils.ShowImages.showImageFromFile;
-import static com.aleksandrp.bitsteptest.utils.ShowToast.showMessageError;
 
 public class RegisterActivity extends AppCompatActivity implements MvpActionView {
 
@@ -88,12 +97,61 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
+        mPath = "";
         iv_back.setVisibility(View.VISIBLE);
+        setMaskPhone();
 
         serviceIntent = new Intent(this, ServiceApi.class);
         mPresenter = new LoginPresenter();
         mPresenter.setMvpView(this);
         mPresenter.init();
+
+    }
+
+    private void setMaskPhone() {
+//        et_phone.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence mCharSequence, int mI, int mI1, int mI2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence mCharSequence, int mI, int mI1, int mI2) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable mEditable) {
+//                et_phone.setSelection(mEditable.length());
+//            }
+//        });
+        final Slot[] PHONE_NUMBER = {
+                PredefinedSlots.hardcodedSlot('+'),
+                PredefinedSlots.hardcodedSlot('3'),
+                PredefinedSlots.hardcodedSlot('8'),
+                PredefinedSlots.hardcodedSlot('0'),
+                PredefinedSlots.hardcodedSlot(' ').withTags(Slot.TAG_DECORATION),
+                PredefinedSlots.digit(),
+                PredefinedSlots.digit(),
+                PredefinedSlots.hardcodedSlot(' ').withTags(Slot.TAG_DECORATION),
+                PredefinedSlots.digit(),
+                PredefinedSlots.digit(),
+                PredefinedSlots.digit(),
+                PredefinedSlots.hardcodedSlot(' ').withTags(Slot.TAG_DECORATION),
+                PredefinedSlots.digit(),
+                PredefinedSlots.digit(),
+                PredefinedSlots.hardcodedSlot(' ').withTags(Slot.TAG_DECORATION),
+                PredefinedSlots.digit(),
+                PredefinedSlots.digit(),
+        };
+        MaskImpl mask = MaskImpl.createTerminated(PHONE_NUMBER);
+//        MaskImpl mask = MaskImpl.createTerminated(PHONE_NUMBER);
+//        MaskImpl mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
+        mask.setHideHardcodedHead(false);
+        mask.setPlaceholder('*');
+        mask.setShowingEmptySlots(true);
+        mask.setForbidInputWhenFilled(true);
+        FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
+        formatWatcher.installOn(et_phone);
 
     }
 
@@ -127,7 +185,6 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         super.onBackPressed();
     }
-
 
 
     @Override
@@ -169,7 +226,7 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Intent intent = new Intent();
                     intent.setData(sourceImageUri);
-                    onActivityResult(GALLERY_REQUEST,  resultCode,  intent);
+                    onActivityResult(GALLERY_REQUEST, resultCode, intent);
                 } else {
                     String path = sourceImageUri.getPath();
                     File file = new File(path);
@@ -200,8 +257,43 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
     //    ==================================================
 
     private void register() {
-    }
+        String email = et_email.getText().toString().trim();
+        String organisation = et_organisation.getText().toString().trim();
+        String locale = et_locale.getText().toString().trim();
+        String site = et_site.getText().toString().trim();
+        String password = et_password.getText().toString().trim();
+        String password_confirm = et_password_confirm.getText().toString().trim();
+        String phone = et_phone.getText().toString().trim();
+        phone = phone.replaceAll(" ", "");
 
+        if (!Validation.isValidEmail(email)) {
+            showMessageError(App.getContext().getString(R.string.email_incorrect));
+        } else if (organisation.isEmpty()) {
+            showMessageError(App.getContext().getString(R.string.organisation_rules));
+        } else if (locale.isEmpty()) {
+            showMessageError(App.getContext().getString(R.string.locale_rules));
+        } else if (!Validation.isValidPhone(phone)) {
+            showMessageError(App.getContext().getString(R.string.phone_rules));
+        } else if (!Validation.isValidSite(site)) {
+            showMessageError(App.getContext().getString(R.string.site_rules));
+        } else if (!Validation.isValidPassword(password)) {
+            showMessageError(App.getContext().getString(R.string.password_rules));
+        } else if (!Validation.isValidPassword(password_confirm)) {
+            showMessageError(App.getContext().getString(R.string.password_rules));
+        } else if (!password.equals(password_confirm)) {
+            showMessageError(App.getContext().getString(R.string.password_confirmed));
+        } else {
+            mPresenter.registerNewUser(
+                    email,
+                    organisation,
+                    locale,
+                    site,
+                    password,
+                    phone,
+                    mPath
+            );
+        }
+    }
 
 
     private void parseAnswer(File file) {
@@ -211,6 +303,34 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
         } else {
             iv_icon_user.setImageResource(0);
             this.mPath = "";
+        }
+    }
+
+
+    //    ================================================
+
+    public void makeRequest(NetworkRequestEvent<Bundle> mEvent) {
+        showProgress(true);
+        if (mEvent.getData() != null)
+            serviceIntent.putExtras((Bundle) mEvent.getData());
+        serviceIntent.putExtra(SERVICE_JOB_ID_TITLE, mEvent.getId());
+        startService(serviceIntent);
+    }
+
+
+    //    ================================================
+
+    // from presenter
+    public void showMessageError(String mMessage) {
+        showProgress(false);
+        ShowToast.showMessageError(mMessage);
+    }
+
+    private void showProgress(boolean mShowPhone) {
+        if (mShowPhone) {
+            progressBar_registration.setVisibility(View.VISIBLE);
+        } else {
+            progressBar_registration.setVisibility(View.GONE);
         }
     }
 
