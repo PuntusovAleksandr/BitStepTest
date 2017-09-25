@@ -13,10 +13,13 @@ import android.widget.TextView;
 
 import com.aleksandrp.bitsteptest.App;
 import com.aleksandrp.bitsteptest.R;
+import com.aleksandrp.bitsteptest.api.model._UserModel;
 import com.aleksandrp.bitsteptest.api.service.ServiceApi;
+import com.aleksandrp.bitsteptest.databaase.DBHelper;
 import com.aleksandrp.bitsteptest.presenter.LoginPresenter;
 import com.aleksandrp.bitsteptest.presenter.interfaces.MvpActionView;
 import com.aleksandrp.bitsteptest.rx.event.NetworkRequestEvent;
+import com.aleksandrp.bitsteptest.utils.SettingsApp;
 import com.aleksandrp.bitsteptest.utils.ShowToast;
 
 import butterknife.Bind;
@@ -46,16 +49,20 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
     @Bind(R.id.iv_fb)
     ImageView iv_fb;
 
-
     private LoginPresenter mPresenter;
     private Intent serviceIntent;
 
     private Uri sourceImageUri;
     private String mPath;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (SettingsApp.getInstance().isLogin()){
+            startUntent();
+        }
+
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
@@ -89,9 +96,11 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
             mPresenter.destroy();
         }
         stopService(serviceIntent);
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
         super.onDestroy();
     }
-
 
 
 //    ==================================================
@@ -129,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
 
 
     private void signUp() {
-        startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         finish();
     }
 //    ==================================================
@@ -141,17 +150,20 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
         ShowToast.showMessageError(mMessage);
     }
 
-    public void goToMainActivity() {
-//        Intent intent = new Intent(this, MainActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
-//        finish();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                showProgress(false);
-//            }
-//        }, 500);
+    public void goToMainActivity(_UserModel mData) {
+        dbHelper = new DBHelper(this);
+        dbHelper.initSqlDb(dbHelper);
+        dbHelper.putUser(mData);
+
+        startUntent();
+    }
+
+    private void startUntent() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        SettingsApp.getInstance().setLogin(true);
+        finish();
     }
 
     public void clearPassword() {
@@ -174,7 +186,6 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
             progressBar_registration.setVisibility(View.GONE);
         }
     }
-
 
 
 }

@@ -10,10 +10,11 @@
         android:id="@+id/tv_title_toolbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:text="@string/register_activity"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/_20sp"/>
+        android:textSize="@dimen/_20sp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 
     <ImageView
         android:id="@+id/iv_back"

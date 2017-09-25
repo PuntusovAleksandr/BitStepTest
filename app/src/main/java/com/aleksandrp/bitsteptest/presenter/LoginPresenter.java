@@ -151,7 +151,7 @@ public class LoginPresenter extends BasePresenter implements PresenterEventListe
     private void saveTokenServer(UserModel mData) {
         if (mData.status) {
             try {
-                ((LoginActivity) mvpView).goToMainActivity();
+                ((LoginActivity) mvpView).goToMainActivity(mData.data);
             } catch (NullPointerException mE) {
                 mE.printStackTrace();
             }

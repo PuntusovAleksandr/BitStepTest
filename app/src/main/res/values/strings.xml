@@ -42,6 +42,7 @@
     <string name="permissions_not_granted">Разрешение не подтверждено</string>
     <string name="open_permissions_grant">Открыть разрешение</string>
     <string name="unkown_format">Неизвестный формат</string>
+    <string name="profile">Профиль</string>
 
     <!--Увас еще нет аккаунта? <b><font color="#FFFFFF">Зарегистрироваться</font></b>-->
 
