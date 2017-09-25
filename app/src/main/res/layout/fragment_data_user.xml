@@ -161,7 +161,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/_8dp"
             android:background="@android:color/transparent"
-            android:digits="1234567890"
+            android:digits="+1234567890"
             android:hint="@string/phone"
             android:inputType="phone"
             android:maxLines="1"

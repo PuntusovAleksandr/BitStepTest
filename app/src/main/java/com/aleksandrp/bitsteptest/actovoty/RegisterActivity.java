@@ -151,7 +151,7 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
         mask.setShowingEmptySlots(true);
         mask.setForbidInputWhenFilled(true);
         FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
-        formatWatcher.installOn(et_phone);
+//        formatWatcher.installOn(et_phone);
 
     }
 
