@@ -96,6 +96,7 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        hide register activity from notification
         if (getIntent().getBooleanExtra(CLOSE, false)) {
             runOnUiThread(new Runnable() {
                 @Override

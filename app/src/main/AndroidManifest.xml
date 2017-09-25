@@ -23,6 +23,7 @@
         <activity
             android:name=".actovoty.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
