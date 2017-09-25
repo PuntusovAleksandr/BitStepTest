@@ -1,18 +1,25 @@
 package com.aleksandrp.bitsteptest.actovoty;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.aleksandrp.bitsteptest.R;
 import com.aleksandrp.bitsteptest.api.model.NewUserModel;
 import com.aleksandrp.bitsteptest.databaase.DBHelper;
+import com.aleksandrp.bitsteptest.utils.SettingsApp;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.aleksandrp.bitsteptest.utils.ShowImages.showImageFromFile;
 
@@ -43,6 +50,9 @@ public class ProfileActivity extends AppCompatActivity {
     @Bind(R.id.et_password_confirm)
     EditText et_password_confirm;
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
     private DBHelper dbHelper;
 
     @Override
@@ -50,6 +60,9 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+
+        setActionBar(toolbar);
+        getActionBar().setDisplayShowTitleEnabled(false);
 
         setUi();
     }
@@ -60,6 +73,36 @@ public class ProfileActivity extends AppCompatActivity {
             dbHelper.close();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Операции для выбранного пункта меню
+        switch (item.getItemId()) {
+            case R.id.about:
+//                startActivity(new Intent(ProfileActivity.this, AboutActivity.class));
+                return true;
+            case R.id.logout:
+                SettingsApp.getInstance().setLogin(false);
+                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //    ================================================
+    @OnClick(R.id.iv_menu)
+    public void iv_menuClick() {
+        this.openOptionsMenu();
     }
 
     private void setUi() {
