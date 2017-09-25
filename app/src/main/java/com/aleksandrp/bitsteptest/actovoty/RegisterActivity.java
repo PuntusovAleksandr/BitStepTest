@@ -47,6 +47,8 @@ import ru.tinkoff.decoro.slots.Slot;
 import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
+import static com.aleksandrp.bitsteptest.fcm.MyFirebaseMessagingService.CLOSE;
+import static com.aleksandrp.bitsteptest.fcm.MyFirebaseMessagingService.CLOSE_BODY;
 import static com.aleksandrp.bitsteptest.utils.FileUtils.onCaptureImageResult;
 import static com.aleksandrp.bitsteptest.utils.STATIC_PARAMS.SERVICE_JOB_ID_TITLE;
 import static com.aleksandrp.bitsteptest.utils.ShowImages.showImageFromFile;
@@ -94,6 +96,16 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getBooleanExtra(CLOSE, false)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ShowToast.showMessageError(getIntent().getStringExtra(CLOSE_BODY));
+                }
+            });
+            onBackPressed();
+        }
+
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 

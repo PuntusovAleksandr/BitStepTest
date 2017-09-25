@@ -17,7 +17,7 @@ import android.util.Log;
 
 import com.aleksandrp.bitsteptest.App;
 import com.aleksandrp.bitsteptest.R;
-import com.aleksandrp.bitsteptest.actovoty.LoginActivity;
+import com.aleksandrp.bitsteptest.actovoty.RegisterActivity;
 import com.aleksandrp.bitsteptest.utils.SettingsApp;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -40,6 +40,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static AudioManager mAudioManager;
     private static MediaPlayer mMediaPlayer;
+
+    public static final String CLOSE = "CLOSE";
+    public static final String CLOSE_BODY = "CLOSE_BODY";
 
 
     @Override
@@ -91,8 +94,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         | PowerManager.ACQUIRE_CAUSES_WAKEUP, "bbbb");
         wl.acquire(1000);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra(CLOSE_BODY, mBody);
+        intent.putExtra(CLOSE, true);
+        intent.setFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_NO_HISTORY
+        );
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/" + R.raw.blop_my_thumps);
