@@ -11,4 +11,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="_20sp">20sp</dimen>
     <dimen name="_150dp">150dp</dimen>
+    <dimen name="_10sp">10sp</dimen>
+    <dimen name="_2dp">2dp</dimen>
 </resources>

@@ -86,6 +86,10 @@
 \n
 \n# По завершению работы создать готовый apk файл. Залить проект, вместе с apk файлом, на GitHub или другой ресурс, где можно будет просмотреть и скачать работу.</string>
     <string name="author">Автор - Александр Пунтусов</string>
+    <string name="goal">Цель - 15 000 шагов</string>
+    <string name="day">День</string>
+    <string name="week">неделя</string>
+    <string name="month">месяц</string>
 
 
 </resources>

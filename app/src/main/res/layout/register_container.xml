@@ -30,12 +30,89 @@
                 android:text="@string/register_activity"
                 android:textColor="@android:color/white"/>
 
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/line_char"
+
+            <RelativeLayout
+                android:id="@+id/ll_char"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_8dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_16dp"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/line_char"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:background="@drawable/bg_gradient_blue"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/_8dp"
+                    android:paddingRight="@dimen/_8dp"
+                    android:paddingTop="@dimen/_8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.3"
+                        android:text="@string/goal"
+                        android:textAllCaps="true"
+                        android:textSize="@dimen/_14sp"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:id="@+id/rl_last_24"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:padding="@dimen/_2dp"
+                        android:text="@string/day"
+                        android:textAllCaps="true"
+                        android:background="@drawable/bg_active_bt"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_10sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/rl_last_week"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_8dp"
+                        android:layout_marginRight="@dimen/_8dp"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:padding="@dimen/_2dp"
+                        android:text="@string/week"
+                        android:textAllCaps="true"
+                        android:background="@drawable/bg_deactib_bt"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="@dimen/_10sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/rl_last_month"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:padding="@dimen/_2dp"
+                        android:text="@string/month"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="@dimen/_10sp"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </LinearLayout>
 
