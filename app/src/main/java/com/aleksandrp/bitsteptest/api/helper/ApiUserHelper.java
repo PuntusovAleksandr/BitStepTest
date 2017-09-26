@@ -130,8 +130,8 @@ public class ApiUserHelper {
                         createPartFromString(mNewUserModel.getLocale()),
                         createPartFromString(mNewUserModel.getSite()),
                         createPartFromString(mNewUserModel.getPassword()),
-                        createPartFromString(mNewUserModel.getPassword()),
-                        createPartFromString(tokenFCM)
+                        createPartFromString(tokenFCM),
+                        createPartFromString(mNewUserModel.getPhone())
                 );
         if (isPhoto) {
             MultipartBody.Part part = prepareFile("icon", file);
@@ -141,7 +141,7 @@ public class ApiUserHelper {
                     createPartFromString(mNewUserModel.getLocale()),
                     createPartFromString(mNewUserModel.getSite()),
                     createPartFromString(mNewUserModel.getPassword()),
-                    createPartFromString(mNewUserModel.getPassword()),
+                    createPartFromString(mNewUserModel.getPhone()),
                     createPartFromString(tokenFCM),
                     part
             );

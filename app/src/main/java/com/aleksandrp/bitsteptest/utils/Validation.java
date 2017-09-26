@@ -9,7 +9,7 @@ public class Validation {
     public static final String REGULAR_MAIL = "^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,15}$";
     public static final String REGULAR_PASS = "(?=(.*[0-9]))(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,20}";
     public static final String REGULAR_SITE = "^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$";
-    public static final String REGULAR_PHONE = "^((\\+380)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{9}$";
+    public static final String REGULAR_PHONE = "^((\\+380)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{13}$";
 
 
     /**

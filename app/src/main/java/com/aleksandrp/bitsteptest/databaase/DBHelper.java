@@ -64,8 +64,6 @@ public class DBHelper extends SQLiteOpenHelper {
         NewUserModel model = null;
         Cursor c = db.query("USER", null, null, null, null, null, null);
         if (c.moveToFirst()) {
-            int nameColIndex = c.getColumnIndex("name");
-            int emailColIndex = c.getColumnIndex("email");
             do {
                 model = new NewUserModel(
                         c.getString(c.getColumnIndex("email")),

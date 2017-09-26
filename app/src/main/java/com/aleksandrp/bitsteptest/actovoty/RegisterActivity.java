@@ -35,17 +35,14 @@ import com.aleksandrp.bitsteptest.rx.event.NetworkRequestEvent;
 import com.aleksandrp.bitsteptest.utils.FileUtils;
 import com.aleksandrp.bitsteptest.utils.ShowToast;
 import com.aleksandrp.bitsteptest.utils.Validation;
+import com.mihaelisaev.metw.MaskedEditTextWatcher;
+import com.mihaelisaev.metw.MaskedEditTextWatcherDelegate;
 
 import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import ru.tinkoff.decoro.MaskImpl;
-import ru.tinkoff.decoro.slots.PredefinedSlots;
-import ru.tinkoff.decoro.slots.Slot;
-import ru.tinkoff.decoro.watchers.FormatWatcher;
-import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 import static com.aleksandrp.bitsteptest.fcm.MyFirebaseMessagingService.CLOSE;
 import static com.aleksandrp.bitsteptest.fcm.MyFirebaseMessagingService.CLOSE_BODY;
@@ -122,50 +119,25 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
     }
 
     private void setMaskPhone() {
-//        et_phone.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence mCharSequence, int mI, int mI1, int mI2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence mCharSequence, int mI, int mI1, int mI2) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable mEditable) {
-//                et_phone.setSelection(mEditable.length());
-//            }
-//        });
-        final Slot[] PHONE_NUMBER = {
-                PredefinedSlots.hardcodedSlot('+'),
-                PredefinedSlots.hardcodedSlot('3'),
-                PredefinedSlots.hardcodedSlot('8'),
-                PredefinedSlots.hardcodedSlot('0'),
-                PredefinedSlots.hardcodedSlot(' ').withTags(Slot.TAG_DECORATION),
-                PredefinedSlots.digit(),
-                PredefinedSlots.digit(),
-                PredefinedSlots.hardcodedSlot(' ').withTags(Slot.TAG_DECORATION),
-                PredefinedSlots.digit(),
-                PredefinedSlots.digit(),
-                PredefinedSlots.digit(),
-                PredefinedSlots.hardcodedSlot(' ').withTags(Slot.TAG_DECORATION),
-                PredefinedSlots.digit(),
-                PredefinedSlots.digit(),
-                PredefinedSlots.hardcodedSlot(' ').withTags(Slot.TAG_DECORATION),
-                PredefinedSlots.digit(),
-                PredefinedSlots.digit(),
-        };
-        MaskImpl mask = MaskImpl.createTerminated(PHONE_NUMBER);
-//        MaskImpl mask = MaskImpl.createTerminated(PHONE_NUMBER);
-//        MaskImpl mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
-        mask.setHideHardcodedHead(false);
-        mask.setPlaceholder('*');
-        mask.setShowingEmptySlots(true);
-        mask.setForbidInputWhenFilled(true);
-        FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
-//        formatWatcher.installOn(et_phone);
-
+        MaskedEditTextWatcher simpleListener = new MaskedEditTextWatcher(et_phone, new MaskedEditTextWatcherDelegate() {
+            @Override
+            public String maskForCountryCode(String text) {
+                //Here you receive just entered text
+                //and you should return the mask or null
+                if (text.equals("1")) {
+                    return "+1 ###-###-####";
+                } else if (text.equals("7")) {
+                    return "+7 (###) ###-##-##";
+                } else if (text.equals("44")) {
+                    return "+44 (##) ###-####";
+                } else if (text.equals("64")) {
+                    return "+64 ## # (###) ##-##";
+                }
+                return "+380 ## ### ## ##";
+            }
+        });
+//Add the textWatcher to  text field
+        et_phone.addTextChangedListener(simpleListener);
     }
 
     @Override
@@ -277,7 +249,6 @@ public class RegisterActivity extends AppCompatActivity implements MvpActionView
         String password = et_password.getText().toString().trim();
         String password_confirm = et_password_confirm.getText().toString().trim();
         String phone = et_phone.getText().toString().trim();
-        phone = phone.replaceAll(" ", "");
 
         if (!Validation.isValidEmail(email)) {
             showMessageError(App.getContext().getString(R.string.email_incorrect));

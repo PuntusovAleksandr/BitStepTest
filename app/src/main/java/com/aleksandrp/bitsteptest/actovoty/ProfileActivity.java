@@ -28,6 +28,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.mihaelisaev.metw.MaskedEditTextWatcher;
+import com.mihaelisaev.metw.MaskedEditTextWatcherDelegate;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -137,7 +139,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setUi() {
-
         tv_sign_up.setVisibility(View.GONE);
         iv_menu.setVisibility(View.VISIBLE);
         tv_title_toolbar.setText(R.string.profile);
@@ -168,6 +169,30 @@ public class ProfileActivity extends AppCompatActivity {
         rl_last_24.setBackgroundResource(R.drawable.bg_active_bt);
 
         initChar();
+
+        initMask();
+    }
+
+    private void initMask() {
+        MaskedEditTextWatcher simpleListener = new MaskedEditTextWatcher(et_phone, new MaskedEditTextWatcherDelegate() {
+            @Override
+            public String maskForCountryCode(String text) {
+                //Here you receive just entered text
+                //and you should return the mask or null
+                if (text.equals("1")) {
+                    return "+1 ###-###-####";
+                } else if (text.equals("7")) {
+                    return "+7 (###) ###-##-##";
+                } else if (text.equals("44")) {
+                    return "+44 (##) ###-####";
+                } else if (text.equals("64")) {
+                    return "+64 ## # (###) ##-##";
+                }
+                return "+380 ## ### ## ##";
+            }
+        });
+//Add the textWatcher to  text field
+        et_phone.addTextChangedListener(simpleListener);
     }
 
     private void initChar() {
