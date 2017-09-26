@@ -87,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Операции для выбранного пункта меню
         switch (item.getItemId()) {
             case R.id.about:
-//                startActivity(new Intent(ProfileActivity.this, AboutActivity.class));
+                startActivity(new Intent(ProfileActivity.this, AboutActivity.class));
                 return true;
             case R.id.logout:
                 SettingsApp.getInstance().setLogin(false);
