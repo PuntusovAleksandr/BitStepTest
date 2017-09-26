@@ -2,18 +2,24 @@ package com.aleksandrp.bitsteptest.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.aleksandrp.bitsteptest.App;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -106,5 +112,78 @@ public class FileUtils {
                 });
     }
 
+
+    //save image
+    public static void imageDownload(String urlStr) {
+        new RetrieveFeedTask(urlStr).execute();
+    }
+
+
+    static class RetrieveFeedTask extends AsyncTask<Void, Void, Void> {
+
+        private String urlStr;
+        private File file = null;
+
+        public RetrieveFeedTask(String urlStr) {
+            this.urlStr = urlStr;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            URL url = null;
+            try {
+                url = new URL(urlStr);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            if (url == null) return null;
+
+            Bitmap bmp = null;
+            try {
+                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            file = saveFileFromBitmapinCach(bmp);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (file != null && file.exists())
+                SettingsApp.getInstance().savePathIcon(file.getPath());
+        }
+    }
+
+    @NonNull
+    public static File saveFileFromBitmapinCach(Bitmap thumbnail) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File outputDir = App.getContext().getCacheDir(); // context being the Activity pointer
+        File destination = null;
+        try {
+            destination = File.createTempFile("icon_", "_", outputDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+            destination = getNewFile();
+        }
+//        File destination = getNewFile();
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return destination;
+    }
 
 }

@@ -56,6 +56,7 @@ public class SettingsApp {
     private static final String KEY_EMAIL= "KEY_EMAIL";
     private static final String KEY_PASS= "KEY_PASS";
     private static final String KEY_TOKEN_FCM = "KEY_TOKEN_FCM";
+    private static final String KEY_PATH_FOLE = "KEY_PATH_FOLE";
 
 
     // Default values of settings
@@ -157,6 +158,18 @@ public class SettingsApp {
     public void setTokenFCM(String ip) {
         Log.d(TAG, "setTokenFCM " + ip);
         editor.putString(KEY_TOKEN_FCM, ip).commit();
+    }
+
+
+    public String getPathIcon() {
+        Log.d(TAG, "getPathIcon");
+        return sPref.getString(KEY_PATH_FOLE, "");
+    }
+
+
+    public void savePathIcon(String ip) {
+        Log.d(TAG, "savePathIcon " + ip);
+        editor.putString(KEY_PATH_FOLE, ip).commit();
     }
 
 }

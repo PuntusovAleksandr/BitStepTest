@@ -26,6 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.aleksandrp.bitsteptest.utils.FileUtils.imageDownload;
 import static com.aleksandrp.bitsteptest.utils.InternetUtils.checkInternetConnection;
 import static com.aleksandrp.bitsteptest.utils.STATIC_PARAMS.SERVICE_JOB_ID_TITLE;
 
@@ -150,7 +151,14 @@ public class LoginActivity extends AppCompatActivity implements MvpActionView {
         ShowToast.showMessageError(mMessage);
     }
 
-    public void goToMainActivity(_UserModel mData) {
+    public void goToMainActivity(final _UserModel mData) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                imageDownload(mData.avatar);
+            }
+        }).start();
+
         dbHelper = new DBHelper(this);
         dbHelper.initSqlDb(dbHelper);
         dbHelper.putUser(mData);

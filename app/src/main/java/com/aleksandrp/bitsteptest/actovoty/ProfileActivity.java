@@ -29,6 +29,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -36,6 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.graphics.Color.WHITE;
+import static com.aleksandrp.bitsteptest.utils.FileUtils.imageDownload;
 import static com.aleksandrp.bitsteptest.utils.ShowImages.showImageFromFile;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -152,7 +154,14 @@ public class ProfileActivity extends AppCompatActivity {
         et_phone.setText(model.getPhone());
         et_site.setText(model.getSite());
 
-        showImageFromFile(model.getPath(), iv_icon_user);
+
+        File file = new File(SettingsApp.getInstance().getPathIcon());
+        if (file.exists()) {
+            showImageFromFile(file, iv_icon_user);
+        }else {
+            imageDownload(model.getPath());
+            showImageFromFile(model.getPath(), iv_icon_user);
+        }
 
         setDefaultBt();
         rl_last_24.setTextColor(WHITE);
